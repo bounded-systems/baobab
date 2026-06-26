@@ -1,6 +1,7 @@
 {
   "tasks": {
-    "spike": "deno run --allow-net --allow-read --allow-write=spike spike/component-sha.ts"
+    "spike": "deno run --allow-net --allow-read --allow-write=spike spike/component-sha.ts",
+    "spike:pinning": "deno run --allow-net --allow-read --allow-write=spike spike/with-pinning.ts"
   },
   "imports": {
     "@bounded-systems/lone": "jsr:@bounded-systems/lone@^0.1",

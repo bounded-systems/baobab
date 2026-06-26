@@ -1,0 +1,34 @@
+{
+  "_type": "https://in-toto.io/Statement/v1",
+  "subject": [
+    {
+      "name": "button@brand",
+      "digest": {
+        "sha256": "03bd1e8e99837e26031d8b3e5dfba673671f7a4cd5ea0d7739f289b21ca47e12"
+      }
+    }
+  ],
+  "predicateType": "https://bounded-systems.github.io/baobab/component/v0",
+  "predicate": {
+    "materials": {
+      "pinning": {
+        "repo": "bdelanghe/brand",
+        "commit": "2796ce547318909079bbb42093986efa809942f4",
+        "url": "https://raw.githubusercontent.com/bdelanghe/brand/2796ce547318909079bbb42093986efa809942f4/tokens/tokens.json"
+      },
+      "tokens": {
+        "color.forest": "#0C5A42",
+        "color.white": "#FFFFFF",
+        "font.display": "Space Grotesk, sans-serif",
+        "radius.radius-md": "12px",
+        "size.text-body": "15px"
+      },
+      "template": "(t, p)=>`<button type=\"button\" style=\"` + `background:${t[\"color.forest\"]};color:${t[\"color.white\"]};border:0;` + `border-radius:${t[\"radius.radius-md\"]};font-family:${t[\"font.display\"]};` + `font-size:${t[\"size.text-body\"]};padding:10px 16px\">${p.label ?? \"\"}</button>`",
+      "blessingEngine": "jsr:@bounded-systems/lone@^0.1"
+    },
+    "blessing": {
+      "blessed": true,
+      "findings": []
+    }
+  }
+}
