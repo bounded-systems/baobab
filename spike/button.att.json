@@ -1,0 +1,27 @@
+{
+  "_type": "https://in-toto.io/Statement/v1",
+  "subject": [
+    {
+      "name": "button@search",
+      "digest": {
+        "sha256": "b213a242484bdd230fa8e517b495b255568589f2c1cf0202a268b419fac48bfd"
+      }
+    }
+  ],
+  "predicateType": "https://bounded-systems.github.io/baobab/component/v0",
+  "predicate": {
+    "materials": {
+      "tokens": {
+        "color.fg": "#0C5A42",
+        "radius.md": "8px",
+        "size.touch": "44px"
+      },
+      "template": "(t, p)=>`<button type=\"button\"` + ` style=\"border-radius:${t[\"radius.md\"]};min-inline-size:${t[\"size.touch\"]};color:${t[\"color.fg\"]}\">` + `${p.label ?? \"\"}</button>`",
+      "blessingEngine": "jsr:@bounded-systems/lone@^0.1"
+    },
+    "blessing": {
+      "blessed": true,
+      "findings": []
+    }
+  }
+}
