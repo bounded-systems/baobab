@@ -1,0 +1,28 @@
+spike/component-sha.ts
+  s_98e316d0b3248a::t_c3637f56f6025d 21-28,30,33,60-63,67,70,80,85,91-92
+  s_98e316d0b3248a::t_7ee0849a07e63d 1-20,29,31-32,34-59,64-66,68-69,71-79,81-84,86-90,93-95
+deno.json
+  s_98e316d0b3248a::t_8814031c013141 1-10
+spike/README.md
+  s_98e316d0b3248a::t_344dbbd071ee45 1-36
+deno.lock
+  s_98e316d0b3248a::t_0670962bd2d9c8 1-110
+spike/button.att.json
+  s_98e316d0b3248a::t_53be584d63476f 1-27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "02d0e2a592123aa99fa3c1d3e40184a836667024",
+  "prompts": {},
+  "sessions": {
+    "s_98e316d0b3248a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8db980ee-eb6b-4866-832b-f795cef7f33c",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Robert DeLanghe <oink_monocle_7d@icloud.com>"
+    }
+  }
+}
