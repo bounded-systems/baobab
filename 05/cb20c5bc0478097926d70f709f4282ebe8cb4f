@@ -1,0 +1,21 @@
+docs/RFC.md
+  s_98e316d0b3248a::t_132f2441e92559 1-68
+README.md
+  s_98e316d0b3248a::t_1fe7383a1d699e 1-45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "05cb20c5bc0478097926d70f709f4282ebe8cb4f",
+  "prompts": {},
+  "sessions": {
+    "s_98e316d0b3248a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8db980ee-eb6b-4866-832b-f795cef7f33c",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Robert DeLanghe <oink_monocle_7d@icloud.com>"
+    }
+  }
+}
