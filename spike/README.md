@@ -81,5 +81,57 @@ to bless.
 `brand` : `baobab` :: `data/*.json` : `contract/*.schema.json` — the
 structure-vs-pinning split the RFC names, now exercised end-to-end across a set.
 
-Next (M4): attest the whole set and sign the attestations in CI — a
-per-component analogue of robertdelanghe.dev's `/provenance`.
+---
+
+# signing in CI (baobab M4)
+
+M2/M3 _emit_ the in-toto Statements; M4 **signs** them, so each component
+attestation is independently verifiable — a per-component analogue of
+robertdelanghe.dev's signed `/provenance`, over the same GitHub OIDC → Sigstore
+path `bounded-systems/lone` uses to publish to JSR.
+
+[`.github/workflows/attest.yml`](../.github/workflows/attest.yml) runs on push to
+`main` (paths `spike/**`) and `workflow_dispatch`. It checks out, sets up Deno,
+re-runs `deno task spike` + `deno task spike:pinning` to emit the attestations,
+then **keyless-signs each `*.att.json` with cosign** and uploads the
+`att.json` + `.sig` + `.crt` as a build artifact.
+
+**Keyless OIDC — no long-lived keys.** The job requests `id-token: write`. cosign
+exchanges the ambient GitHub Actions OIDC token at **Fulcio** for a short-lived
+(~10 min) signing certificate bound to the workflow identity
+(`https://github.com/bounded-systems/baobab/.github/workflows/attest.yml@refs/heads/main`,
+issuer `https://token.actions.githubusercontent.com`), signs the blob, and logs
+the signature + certificate in the **Rekor** transparency log. The private key
+never persists.
+
+**Why `cosign sign-blob` and not `actions/attest`.** The spike already emits a
+complete in-toto Statement v1 whose `subject` digest is a _synthetic
+content-address_ — `sha256(tokens + template + rendered + blessing)`, not the
+hash of a file on disk. GitHub's native attestation API is keyed by, and verified
+against, a real artifact digest, so it doesn't map to a synthetic subject.
+Signing the Statement as a blob preserves it byte-for-byte and keeps verification
+self-contained.
+
+**Verify** (download the artifact, then):
+
+```sh
+cosign verify-blob \
+  --certificate        spike/att/button.att.json.crt \
+  --signature          spike/att/button.att.json.sig \
+  --certificate-identity-regexp '^https://github.com/bounded-systems/baobab/\.github/workflows/attest\.yml@.*' \
+  --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+  spike/att/button.att.json
+```
+
+**Trust chain.** `att.json` bytes → cosign signature → Fulcio leaf cert (identity
+= the workflow) → Fulcio root (Sigstore TUF roots) + Rekor inclusion proof.
+Verifying re-derives the digest of `att.json`, checks the signature against the
+cert, that the cert chains to Fulcio and matches the expected workflow identity,
+and that the entry is in Rekor — so "this exact component Statement was produced
+and signed by this repo's CI" becomes a checkable fact, not an assertion.
+
+> **Verified vs. not.** Locally verified: the Deno tasks run and re-emit the
+> committed attestation bytes deterministically (clean `git status`), and the
+> workflow YAML parses. **Keyless signing cannot run locally** — it needs the
+> GitHub Actions OIDC environment (Fulcio won't issue a cert without that
+> ambient token). CI is the first real signing.
