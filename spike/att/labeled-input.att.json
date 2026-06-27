@@ -1,0 +1,36 @@
+{
+  "_type": "https://in-toto.io/Statement/v1",
+  "subject": [
+    {
+      "name": "labeled-input@brand",
+      "digest": {
+        "sha256": "6ebee70a33160968be1a07762beffb0008212fa4b4c9e3a028d0c1febcf605fe"
+      }
+    }
+  ],
+  "predicateType": "https://bounded-systems.github.io/baobab/component/v0",
+  "predicate": {
+    "materials": {
+      "pinning": {
+        "repo": "bdelanghe/brand",
+        "commit": "2796ce547318909079bbb42093986efa809942f4",
+        "url": "https://raw.githubusercontent.com/bdelanghe/brand/2796ce547318909079bbb42093986efa809942f4/tokens/tokens.json"
+      },
+      "tokens": {
+        "color.ink": "#16221C",
+        "color.ink-mono": "#5E6B62",
+        "color.line": "#E4E0D4",
+        "font.display": "Space Grotesk, sans-serif",
+        "radius.radius-md": "12px",
+        "size.text-body": "15px",
+        "size.text-label": "11px"
+      },
+      "template": "(t, p)=>`<div style=\"font-family:${t[\"font.display\"]}\">` + `<label for=\"${p.id}\" style=\"color:${t[\"color.ink-mono\"]};` + `font-size:${t[\"size.text-label\"]}\">${p.labelText ?? \"\"}</label>` + `<input${p.associate ? ` id=\"${p.id}\"` : ``} type=\"${p.type ?? \"text\"}\" style=\"` + `border:1px solid ${t[\"color.line\"]};border-radius:${t[\"radius.radius-md\"]};` + `color:${t[\"color.ink\"]};font-size:${t[\"size.text-body\"]};padding:8px 10px\"></div>`",
+      "blessingEngine": "jsr:@bounded-systems/lone@^0.1"
+    },
+    "blessing": {
+      "blessed": true,
+      "findings": []
+    }
+  }
+}

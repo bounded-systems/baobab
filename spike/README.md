@@ -1,36 +1,85 @@
 # spike: component-sha (baobab M2)
 
 Proves the core baobab claim end-to-end: **a component's identity is
-`sha256(tokens + template + rendered + lone blessing)`** — so "this exact component,
-themed this way, blessed clean" is a *provable, addressable* fact, not an assertion.
+`sha256(tokens + template + rendered + lone blessing)`** — so "this exact
+component, themed this way, blessed clean" is a _provable, addressable_ fact,
+not an assertion.
 
 ```
 deno task spike
 ```
 
-Takes one component (a token-driven `<button>`) and computes its content address four ways:
+Takes one component (a token-driven `<button>`) and computes its content address
+four ways:
 
-| variant | address | blessed | findings |
-| --- | --- | --- | --- |
-| labeled | `b213a242…` | true | 0 |
-| re-run (same inputs) | `b213a242…` | true | 0 |
-| radius token bumped | `65d1a7d1…` | true | 0 |
-| label dropped | `d9bb1588…` | **false** | 1 |
+| variant              | address     | blessed   | findings |
+| -------------------- | ----------- | --------- | -------- |
+| labeled              | `b213a242…` | true      | 0        |
+| re-run (same inputs) | `b213a242…` | true      | 0        |
+| radius token bumped  | `65d1a7d1…` | true      | 0        |
+| label dropped        | `d9bb1588…` | **false** | 1        |
 
 …which demonstrates:
 
 - **deterministic** — same inputs → identical address.
 - **token-sensitive** — change a value the pinning supplies → new address.
-- **blessing-sensitive** — break accessibility (drop the button's name) → lone finds it,
-  `blessed` flips `true → false`, and the address changes.
+- **blessing-sensitive** — break accessibility (drop the button's name) → lone
+  finds it, `blessed` flips `true → false`, and the address changes.
 
-It emits [`button.att.json`](./button.att.json), an in-toto Statement v1 whose `subject`
-digest is the component address and whose `predicate` records the materials (tokens +
-template + the lone version) and the blessing. The same in-toto/SLSA shape
-robertdelanghe.dev signs for a whole build — here, for a single component.
+It emits [`button.att.json`](./button.att.json), an in-toto Statement v1 whose
+`subject` digest is the component address and whose `predicate` records the
+materials (tokens + template + the lone version) and the blessing. The same
+in-toto/SLSA shape robertdelanghe.dev signs for a whole build — here, for a
+single component.
 
-`lone` is consumed from JSR (`jsr:@bounded-systems/lone@^0.1`); the tokens are inlined
-(in the real system a *pinning* like `brand` owns them — baobab itself ships no defaults).
+`lone` is consumed from JSR (`jsr:@bounded-systems/lone@^0.1`); the tokens are
+inlined (in the real system a _pinning_ like `brand` owns them — baobab itself
+ships no defaults).
 
-Next (M3+): drive `tokens` from a real pinning, generalize `address()` over a component
-set, and sign the attestation in CI.
+---
+
+# spike: with-pinning (baobab M3)
+
+Takes the two steps M2 deferred: **consume a real pinning** and **generalize
+`address()` over a component _set_.** Same identity claim, no longer a toy.
+
+```
+deno task spike:pinning
+```
+
+**The pinning is real, not inlined.** It loads `bdelanghe/brand`'s
+[`tokens/tokens.json`](https://github.com/bdelanghe/brand/blob/main/tokens/tokens.json)
+(W3C design-tokens format), pinned by commit, then:
+
+1. **resolves the W3C aliases** — `{primitive.green-700}` → `#0C5A42`,
+   recursively (colors alias primitives; `text.*` typography aliases
+   `font.*`/`size.*`), and
+2. **flattens** the tiers to a slot map the templates read:
+   `{ "color.forest": "#0C5A42", "radius.radius-md": "12px", "font.display": "Space Grotesk, sans-serif", … }`.
+
+baobab still ships zero defaults — every value comes from the pinning.
+
+**`address()` is generalized over a component set.** Three text-based,
+token-driven components, each blessing the right element and recording **only
+the tokens it actually slots** (captured via a recording `Proxy`, so
+"tokens-used" — not the whole pinning — enters the address):
+
+| component       | lone blesses  | good props                    | breaks when…                           |
+| --------------- | ------------- | ----------------------------- | -------------------------------------- |
+| `button`        | `<button>`    | visible text label            | label dropped → unnamed button         |
+| `link-button`   | `<a>`         | text + `href`                 | link text dropped → unnamed link       |
+| `labeled-input` | `<div>` field | `<label for>`/`id` associated | association broken → unlabeled control |
+
+Each component reproduces the three M2 properties from the brand pinning —
+deterministic, token-sensitive (bump a brand token → new address),
+blessing-sensitive (remove an a11y prop → lone flags it, `blessed` flips
+`true → false`, address changes) — and emits a per-component in-toto Statement
+v1 to [`spike/att/`](./att/) (`materials` now also records the `pinning` repo +
+commit). The spike is a gate: it exits non-zero if any canonical component fails
+to bless.
+
+`brand` : `baobab` :: `data/*.json` : `contract/*.schema.json` — the
+structure-vs-pinning split the RFC names, now exercised end-to-end across a set.
+
+Next (M4): attest the whole set and sign the attestations in CI — a
+per-component analogue of robertdelanghe.dev's `/provenance`.
