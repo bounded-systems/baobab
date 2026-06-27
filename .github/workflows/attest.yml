@@ -1,0 +1,80 @@
+# M4 — produce + keyless-sign the per-component in-toto attestations.
+#
+# The spike tasks emit in-toto Statement v1 files (spike/**/*.att.json) whose
+# subject digest IS the component content-address: sha256(tokens + template +
+# rendered + lone blessing). This workflow regenerates them, then signs each
+# Statement keyless (GitHub OIDC -> Sigstore Fulcio + Rekor) with cosign, so
+# every component attestation is independently verifiable against this repo's
+# workflow identity — the per-component analogue of robertdelanghe.dev's signed
+# /provenance, and the same OIDC trust path lone uses to publish to JSR.
+#
+# We sign the att.json bytes with `cosign sign-blob` (not actions/attest)
+# deliberately: the spike already emits a complete in-toto Statement whose
+# subject is a *synthetic content-address* (not a file on disk), so the native
+# attestation API — keyed by, and verified against, a real artifact digest —
+# doesn't map. Signing the Statement as a blob preserves it byte-for-byte and
+# keeps verification self-contained (cosign verify-blob over att.json + .sig + .crt).
+
+name: attest
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - spike/**
+  workflow_dispatch:
+
+permissions:
+  id-token: write      # mint the GitHub OIDC token Fulcio exchanges for a signing cert
+  contents: read       # checkout
+  attestations: write  # reserved for native attestation API; harmless for cosign keyless
+
+jobs:
+  sign-attestations:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@667a34cdef165d8d2b2e98dde39547c9daac7282 # v2.0.4
+        with:
+          deno-version: v2.x
+
+      - name: Emit component attestations (in-toto Statement v1)
+        run: |
+          deno task spike          # -> spike/button.att.json   (M2 single component)
+          deno task spike:pinning  # -> spike/att/*.att.json     (M3 component set)
+          echo "attestations emitted:"
+          find spike -name '*.att.json' -print
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@398d4b0eeef1380460a10c8013a76f728fb906ac # v3.9.1
+
+      - name: Keyless-sign each attestation (Fulcio + Rekor)
+        run: |
+          set -euo pipefail
+          shopt -s globstar nullglob
+          for f in spike/**/*.att.json; do
+            echo "::group::sign $f"
+            # Keyless: cosign uses the ambient GitHub Actions OIDC token to obtain a
+            # short-lived Fulcio cert bound to this workflow's identity, signs the blob,
+            # and logs the entry in the Rekor transparency log. No long-lived keys.
+            cosign sign-blob --yes \
+              --output-signature "$f.sig" \
+              --output-certificate "$f.crt" \
+              "$f"
+            echo "::endgroup::"
+          done
+          echo "signed artifacts:"
+          find spike -name '*.att.json.sig' -o -name '*.att.json.crt' | sort
+
+      - name: Upload signed attestations
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: component-attestations
+          path: |
+            spike/**/*.att.json
+            spike/**/*.att.json.sig
+            spike/**/*.att.json.crt
+          if-no-files-found: error
