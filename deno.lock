@@ -1,20 +1,31 @@
 {
   "version": "5",
   "specifiers": {
-    "jsr:@bounded-systems/lone@0.1": "0.1.0",
+    "jsr:@bounded-systems/lone@0.6": "0.6.0",
+    "jsr:@std/assert@1": "1.0.13",
     "jsr:@std/encoding@1": "1.0.10",
+    "jsr:@std/internal@^1.0.6": "1.0.6",
     "npm:linkedom@0.15.3": "0.15.3",
     "npm:zod@3": "3.25.76"
   },
   "jsr": {
-    "@bounded-systems/lone@0.1.0": {
-      "integrity": "eeb66f28a33df869058067a459d4b0c72ef7f53aa12bde7a553ac3f76bd33928",
+    "@bounded-systems/lone@0.6.0": {
+      "integrity": "b299c9acbb210b04f9bf5122c3a5cb76c9f5d86d71e1f2872420da3ad6ecd8b4",
       "dependencies": [
         "npm:zod"
       ]
     },
+    "@std/assert@1.0.13": {
+      "integrity": "ae0d31e41919b12c656c742b22522c32fb26ed0cba32975cb0de2a273cb68b29",
+      "dependencies": [
+        "jsr:@std/internal"
+      ]
+    },
     "@std/encoding@1.0.10": {
       "integrity": "8783c6384a2d13abd5e9e87a7ae0520a30e9f56aeeaa3bdf910a3eaaf5c811a1"
+    },
+    "@std/internal@1.0.6": {
+      "integrity": "9533b128f230f73bd209408bb07a4b12f8d4255ab2a4d22a1fd6d87304aca9a4"
     }
   },
   "npm": {
@@ -102,7 +113,8 @@
   },
   "workspace": {
     "dependencies": [
-      "jsr:@bounded-systems/lone@0.1",
+      "jsr:@bounded-systems/lone@0.6",
+      "jsr:@std/assert@1",
       "jsr:@std/encoding@1",
       "npm:linkedom@0.15.3"
     ]
