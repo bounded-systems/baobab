@@ -1,0 +1,65 @@
+README.md
+  s_98e316d0b3248a::t_28879fc84eecf7 43-105,108-109
+src/tokens.ts
+  s_98e316d0b3248a::t_c6305d048beb94 1-81
+  s_98e316d0b3248a::t_88178372fa40c7 82-83
+src/address.ts
+  s_98e316d0b3248a::t_b889018eaba663 1-13,15-91,102-129
+  s_98e316d0b3248a::t_32ada604ca0bcc 14
+  s_98e316d0b3248a::t_a743598d8c80a1 92-94
+  s_98e316d0b3248a::t_8091ef34652296 96-101
+  s_3afa8ea03cb772::t_7ad4f196b29aca 95
+src/mod.ts
+  s_98e316d0b3248a::t_7e9be4defc1c76 1-46
+tests/attestation_test.ts
+  s_98e316d0b3248a::t_3d5d9f6dbb90ce 1-47
+  s_98e316d0b3248a::t_287ac7fab2e405 48-58
+tests/tokens_test.ts
+  s_98e316d0b3248a::t_db9779642e4892 1-59
+deno.json
+  s_98e316d0b3248a::t_6cd0662f1e0d92 9-10
+  s_98e316d0b3248a::t_90d33a4339df19 24-25,27
+  s_98e316d0b3248a::t_df3b10d4e07c9d 2-7,11-21,23,26
+  s_a4789e0b0492f1::t_8acfc2a28061f6 8
+src/attestation.ts
+  s_98e316d0b3248a::t_f9ffd9f35c9600 1-77
+tests/address_test.ts
+  s_98e316d0b3248a::t_3b7cda5b63645b 1-107
+  s_98e316d0b3248a::t_1522c028fc3a28 108-115
+.github/workflows/publish.yml
+  s_98e316d0b3248a::t_92ceb168e923be 1-23
+deno.lock
+  s_98e316d0b3248a::t_3130bee30c6719 4-5,7,12-13,18-23,26-28,116-117
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "bef923877568bc4d8d2d1bfadc0abf3114b7e4c8",
+  "prompts": {},
+  "sessions": {
+    "s_3afa8ea03cb772": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0e8b57ee-3d61-44b0-b33b-c3f276b478fa",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Robert DeLanghe <1240090+bdelanghe@users.noreply.github.com>"
+    },
+    "s_98e316d0b3248a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8db980ee-eb6b-4866-832b-f795cef7f33c",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Robert DeLanghe <1240090+bdelanghe@users.noreply.github.com>"
+    },
+    "s_a4789e0b0492f1": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "08589f2f-93b7-4db3-a0a5-375b9672f700",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Robert DeLanghe <1240090+bdelanghe@users.noreply.github.com>"
+    }
+  }
+}
