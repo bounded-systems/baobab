@@ -1,0 +1,51 @@
+name: check-contrast (reusable)
+
+# The downstream-usable half of cli/check-contrast.ts as a GitHub Actions workflow —
+# a pinning shouldn't need to hand-roll a script + workflow just to run a check baobab
+# already ships. Call it from any pinning's own workflow:
+#
+#   jobs:
+#     check-contrast:
+#       uses: bounded-systems/baobab/.github/workflows/check-contrast.yml@main
+#       with:
+#         tokens-path: tokens/tokens.json
+#         contract-path: tokens/contrast.contract.json
+#
+# Runs in the CALLER's checkout (workflow_call jobs execute against the caller's
+# repository by default) — only the CLI itself is fetched from JSR, pinned by
+# baobab-version so a caller controls exactly when it moves.
+
+on:
+  workflow_call:
+    inputs:
+      tokens-path:
+        description: "Path (in the calling repo) to the raw W3C design-token tree."
+        required: true
+        type: string
+      contract-path:
+        description: "Path (in the calling repo) to the pinning's own ContrastPair[] JSON."
+        required: true
+        type: string
+      baobab-version:
+        description: "@bounded-systems/baobab version range to run the checker at."
+        required: false
+        type: string
+        default: "^0.2.0"
+
+permissions:
+  contents: read
+
+jobs:
+  check-contrast:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: denoland/setup-deno@667a34cdef165d8d2b2e98dde39547c9daac7282 # v2.0.4
+        with:
+          deno-version: v2.x
+      - name: Run check-contrast
+        run: |
+          deno run --allow-read \
+            "jsr:@bounded-systems/baobab@${{ inputs.baobab-version }}/cli/check-contrast" \
+            --tokens "${{ inputs.tokens-path }}" \
+            --contract "${{ inputs.contract-path }}"

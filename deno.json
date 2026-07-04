@@ -1,8 +1,11 @@
 {
   "name": "@bounded-systems/baobab",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "MIT",
-  "exports": "./src/mod.ts",
+  "exports": {
+    ".": "./src/mod.ts",
+    "./cli/check-contrast": "./cli/check-contrast.ts"
+  },
   "imports": {
     "@bounded-systems/lone": "jsr:@bounded-systems/lone@^0.6.0",
     "linkedom": "npm:linkedom@0.15.3",
@@ -20,11 +23,11 @@
     ]
   },
   "tasks": {
-    "test": "deno test --allow-net --allow-read --fail-fast tests",
-    "fmt": "deno fmt src tests",
-    "lint": "deno lint src tests",
-    "check": "deno check src tests",
-    "ci": "deno fmt --check src tests && deno lint src tests && deno check src tests && deno test --allow-net --allow-read --fail-fast tests",
+    "test": "deno test --allow-net --allow-read --allow-write --allow-run --fail-fast tests",
+    "fmt": "deno fmt src tests cli",
+    "lint": "deno lint src tests cli",
+    "check": "deno check src tests cli",
+    "ci": "deno fmt --check src tests cli && deno lint src tests cli && deno check src tests cli && deno test --allow-net --allow-read --allow-write --allow-run --fail-fast tests",
     "spike": "deno run --allow-net --allow-read --allow-write=spike spike/component-sha.ts",
     "spike:pinning": "deno run --allow-net --allow-read --allow-write=spike spike/with-pinning.ts"
   }
