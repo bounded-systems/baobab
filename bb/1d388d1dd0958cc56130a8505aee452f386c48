@@ -1,0 +1,26 @@
+tests/contrast_test.ts
+  s_d0a1bec15809bc::t_200c17bb5d86bf 18-21,31-36,50-55
+  s_d0a1bec15809bc::t_9d09c0eb4cf32a 1-17,22-30,37-49,56-59
+src/mod.ts
+  s_d0a1bec15809bc::t_930873fb51444c 32-42
+  s_d0a1bec15809bc::t_1e30e813d3cc2b 52-54
+src/contrast.ts
+  s_d0a1bec15809bc::t_200c17bb5d86bf 37-39,78-83
+  s_d0a1bec15809bc::t_e4d9b7e0ebe425 1-36,40-77,84-87
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "bb1d388d1dd0958cc56130a8505aee452f386c48",
+  "prompts": {},
+  "sessions": {
+    "s_d0a1bec15809bc": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "297d0fee-c144-4ae1-8a97-9d7922657403",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Robert DeLanghe <1240090+bdelanghe@users.noreply.github.com>"
+    }
+  }
+}
