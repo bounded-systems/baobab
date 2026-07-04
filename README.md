@@ -85,7 +85,9 @@ const statement = makeStatement("button@brand", a, { repo: "bdelanghe/brand" });
 | `address(tokens, template, props, blessSelector?)` | render → bless → `sha256(tokens-used + template + rendered + blessing)`; returns `{ sha, blessed, findings, blessing, used, rendered }` |
 | `flattenTokens(root)` | resolve W3C design-token `{alias}` references and flatten to a `{ "color.forest": "#0C5A42" }` slot map |
 | `makeStatement(name, address, pinning?)` | wrap an address as an in-toto Statement v1 whose subject digest **is** the address |
-| types | `Tokens`, `Props`, `Template`, `Finding`, `Address`, `InTotoStatement`, `PinningInfo`, `ComponentMaterials` |
+| `checkContrast(tokens, pairs)` | check a pinning's own token pairs against its own WCAG thresholds; returns `{ ...pair, ratio, pass }[]` |
+| `contrastRatio(hexA, hexB)` / `relativeLuminance(hex)` | WCAG 2.x contrast math, order-independent, no dependency |
+| types | `Tokens`, `Props`, `Template`, `Finding`, `Address`, `InTotoStatement`, `PinningInfo`, `ComponentMaterials`, `ContrastPair`, `ContrastResult` |
 
 Blessing is delegated to [`jsr:@bounded-systems/lone`](https://jsr.io/@bounded-systems/lone),
 pinned by `deno.lock`. The proofs the package guarantees — **deterministic · token-sensitive ·
@@ -94,6 +96,52 @@ blessing-sensitive** — are enforced as a CI gate (`deno task ci`).
 The original spikes (`spike/component-sha.ts`, `spike/with-pinning.ts`) remain in-repo as
 worked examples (the M3 spike addresses a real component set against the `brand` pinning);
 they are excluded from the published JSR distribution.
+
+## Token-level contrast (0.2)
+
+`address()`'s `lone` blessing proves a *rendered component* is accessible — but nothing
+checked whether a pinning's token *values* were even legible together in the first place.
+`checkContrast` is the token-level counterpart, one level down: same "prove it, don't
+assert it" discipline, but it doesn't need a component or a template to run.
+
+```ts
+import { checkContrast, flattenTokens } from "@bounded-systems/baobab";
+
+const tokens = flattenTokens(pinningTokenTree); // a pinning supplies this
+const results = checkContrast(tokens, [
+  // a pinning supplies its own pairs + thresholds — baobab ships neither
+  { fg: "color.on-accent", bg: "color.accent", min: 4.5, label: "text on fill" },
+]);
+results[0].pass; // → true/false
+```
+
+A pinning shouldn't need to hand-write the load-tokens/load-contract/report glue either —
+`cli/check-contrast.ts` is that glue, runnable directly:
+
+```sh
+deno run --allow-read jsr:@bounded-systems/baobab/cli/check-contrast \
+  --tokens tokens/tokens.json --contract tokens/contrast.contract.json
+```
+
+...or as a reusable GitHub Actions workflow, so a pinning's own CI is one `uses:` line:
+
+```yaml
+jobs:
+  check-contrast:
+    uses: bounded-systems/baobab/.github/workflows/check-contrast.yml@main
+    with:
+      tokens-path: tokens/tokens.json
+      contract-path: tokens/contrast.contract.json
+```
+
+`contrast.contract.json` is a plain `ContrastPair[]` — the pinning's own list of which
+token paths pair up and what WCAG ratio each must clear:
+
+```json
+[
+  { "fg": "color.on-accent", "bg": "color.accent", "min": 4.5, "label": "text on fill" }
+]
+```
 
 ### Roadmap
 
@@ -105,5 +153,5 @@ they are excluded from the published JSR distribution.
 
 ## Status
 
-0.1 — component addressing utilities (published to JSR). See [`docs/RFC.md`](docs/RFC.md)
-for the full design and milestones.
+0.2 — component addressing utilities + token-level contrast contract (published to JSR).
+See [`docs/RFC.md`](docs/RFC.md) for the full design and milestones.
