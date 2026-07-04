@@ -1,0 +1,19 @@
+deno.json
+  s_d0a1bec15809bc::t_b368a3468a444f 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "b735f2f79af6d7639df80e53898f2b964e42c4fc",
+  "prompts": {},
+  "sessions": {
+    "s_d0a1bec15809bc": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "297d0fee-c144-4ae1-8a97-9d7922657403",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Robert DeLanghe <1240090+bdelanghe@users.noreply.github.com>"
+    }
+  }
+}
