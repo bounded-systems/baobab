@@ -31,6 +31,22 @@ on:
         required: false
         type: string
         default: "^0.2.0"
+      minimum-dependency-age:
+        description: >-
+          Deno's --minimum-dependency-age (2.9+ defaults this to 24h, refusing to
+          resolve any version published within that window — a supply-chain guard
+          against a freshly-published, possibly-compromised release). Defaults to
+          "0" here because the only thing this workflow resolves from the network
+          is @bounded-systems/baobab itself: a first-party package the caller
+          already trust-bounds via baobab-version above, so the age gate adds no
+          real protection, only a guaranteed ~24h CI failure on every baobab
+          release (bounded-systems/mint#11). A deno.json in the caller's repo
+          does NOT reach this: config-file discovery is skipped when deno run's
+          entrypoint is a bare jsr: specifier — the CLI flag is the only lever
+          that actually applies here, hence a workflow input, not a config file.
+        required: false
+        type: string
+        default: "0"
 
 permissions:
   contents: read
@@ -46,6 +62,7 @@ jobs:
       - name: Run check-contrast
         run: |
           deno run --allow-read \
+            --minimum-dependency-age="${{ inputs.minimum-dependency-age }}" \
             "jsr:@bounded-systems/baobab@${{ inputs.baobab-version }}/cli/check-contrast" \
             --tokens "${{ inputs.tokens-path }}" \
             --contract "${{ inputs.contract-path }}"
