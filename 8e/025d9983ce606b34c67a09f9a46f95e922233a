@@ -1,0 +1,19 @@
+.github/workflows/check-contrast.yml
+  s_d0a1bec15809bc::t_16188f2ab395ec 34-49,65
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "8e025d9983ce606b34c67a09f9a46f95e922233a",
+  "prompts": {},
+  "sessions": {
+    "s_d0a1bec15809bc": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "297d0fee-c144-4ae1-8a97-9d7922657403",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Robert DeLanghe <1240090+bdelanghe@users.noreply.github.com>"
+    }
+  }
+}
