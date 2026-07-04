@@ -29,6 +29,17 @@
  * const statement = makeStatement("button@brand", a);
  * ```
  *
+ * @example Check a pinning's own contrast contract
+ * ```ts
+ * import { checkContrast, flattenTokens } from "@bounded-systems/baobab";
+ *
+ * const tokens = flattenTokens(pinningTokenTree); // a pinning supplies this
+ * const results = checkContrast(tokens, [
+ *   { fg: "color.on-accent", bg: "color.accent", min: 4.5, label: "text on fill" },
+ * ]);
+ * results[0].pass; // → true/false — baobab ships the check, the pinning owns the pairs
+ * ```
+ *
  * @module
  */
 
@@ -37,6 +48,9 @@ export type { Address, Finding, Props, Template } from "./address.ts";
 
 export { flattenTokens } from "./tokens.ts";
 export type { Tokens } from "./tokens.ts";
+
+export { checkContrast, contrastRatio, relativeLuminance } from "./contrast.ts";
+export type { ContrastPair, ContrastResult } from "./contrast.ts";
 
 export { BLESSING_ENGINE, makeStatement } from "./attestation.ts";
 export type {
