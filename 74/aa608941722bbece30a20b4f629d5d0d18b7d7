@@ -1,0 +1,35 @@
+.github/workflows/check-contrast.yml
+  s_d0a1bec15809bc::t_11e8efed66c192 1-51
+cli/check-contrast.ts
+  s_d0a1bec15809bc::t_8fc340fc7e713a 1-32,36-43,47-48,54-60
+  s_d0a1bec15809bc::t_fa69b01e8ea305 33-35,44-46,49-53,61-63
+deno.json
+  s_d0a1bec15809bc::t_c358c9f7708f64 3
+  s_d0a1bec15809bc::t_5affdc7ad47b82 27-29
+  s_d0a1bec15809bc::t_1e3afe4ae606d4 26,30
+  s_d0a1bec15809bc::t_2e08eea231b256 5-8
+tests/cli_check-contrast_test.ts
+  s_d0a1bec15809bc::t_f76742ff59c1fc 70-73,75,77
+  s_d0a1bec15809bc::t_fa69b01e8ea305 50-55
+  s_d0a1bec15809bc::t_35d74b141c18ba 1-49,56-69,74,76,78
+README.md
+  s_d0a1bec15809bc::t_43ded00dfa1211 100-145
+  s_d0a1bec15809bc::t_7095f3406c8e69 156-157
+  s_d0a1bec15809bc::t_9497bce5be83e2 88-90
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.3",
+  "base_commit_sha": "74aa608941722bbece30a20b4f629d5d0d18b7d7",
+  "prompts": {},
+  "sessions": {
+    "s_d0a1bec15809bc": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "297d0fee-c144-4ae1-8a97-9d7922657403",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "Robert DeLanghe <1240090+bdelanghe@users.noreply.github.com>"
+    }
+  }
+}
