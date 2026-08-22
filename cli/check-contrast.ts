@@ -14,7 +14,16 @@
 // contrast.contract.json is a JSON array of ContrastPair: the pinning's own list
 // of which token paths pair up and what ratio each must clear — baobab ships
 // neither the tokens nor the contract, only this runner.
-import { checkContrast, type ContrastPair, flattenTokens } from "../src/mod.ts";
+// NOT through ../src/mod.ts. The barrel re-exports address.ts, which imports
+// linkedom (npm) and @bounded-systems/lone — so a CLI whose whole job is comparing
+// two hex colours dragged a DOM parser and the a11y engine into its module graph,
+// and newer Deno hard-fails resolving those npm deps under a bare `jsr:` entrypoint
+// with no node_modules directory (#18: every pinning's check-contrast went red on a
+// tree that had not changed). contrast.ts and tokens.ts have zero third-party
+// imports, so reaching them directly makes this graph dependency-free and
+// resolvable on any Deno version. The barrel stays right for library consumers.
+import { checkContrast, type ContrastPair } from "../src/contrast.ts";
+import { flattenTokens } from "../src/tokens.ts";
 
 function arg(name: string): string {
   const flag = `--${name}`;
